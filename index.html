@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - VIBE CODING</title>
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-body: #141414;
+            --bg-card: #1f1f1f;
+            --bg-header: rgba(20, 20, 20, 0.95);
+            --primary: #E50914; /* Rojo tipo Netflix */
+            --accent: #46d369;  /* Verde para completado */
+            --text-main: #ffffff;
+            --text-secondary: #b3b3b3;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-top: 80px; /* Espacio para el header fijo */
+        }
+
+        /* --- HEADER / DASHBOARD --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: var(--bg-header);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4%;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .course-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 200px;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL (GRID) --- */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 4%;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- TARJETAS (CARDS) --- */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            border-color: #444;
+        }
+
+        /* Área de Video */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* Ratio 16:9 */
+            height: 0;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Contenido Tarjeta */
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 600;
+            min-height: 3rem; /* Alineación visual */
+        }
+
+        /* Botonera */
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .btn-material {
+            background-color: rgba(255,255,255,0.1);
+            color: var(--text-main);
+        }
+
+        .btn-material:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .btn-quiz {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-quiz:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Toggle "Vista" */
+        .status-control {
+            margin-top: auto;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch Custom CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Estado "Visto" Visual en la tarjeta */
+        .card.completed {
+            opacity: 0.6;
+            border: 1px solid var(--accent);
+        }
+        
+        .card.completed:hover {
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 0.8rem;
+            border-top: 1px solid #222;
+            margin-top: 40px;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+                gap: 15px;
+            }
+            body {
+                padding-top: 120px;
+            }
+            .progress-container {
+                align-items: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Dashboard -->
+    <header>
+        <div class="brand-container">
+            <span class="logo">ADA</span>
+            <span class="course-title">AIWIS - VIBE CODING | Google AI Studio</span>
+        </div>
+        <div class="progress-container">
+            <span class="progress-text" id="progress-text">0 de 6 clases completadas</span>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <h2 class="section-title">Módulos del Curso</h2>
+        
+        <div class="grid">
+            
+            <!-- Card 1 -->
+            <article class="card" id="card-1">
+                <div class="video-wrapper">
+                    <!-- Placeholder YouTube video -->
+                    <!-- <iframe src="https://www.youtube.com/embed/zZ7nWjaC_rs" title="Intro to AI" allowfullscreen loading="lazy"></iframe> -->
+					<iframe src="https://drive.google.com/file/d/1q2fMr0h2v2UBKpP7x1chZhmreFlqqv44/view?usp=sharing" title="Intro to AI" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">1. Introducción a Vibe Coding & Google AI Studio</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="1">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="card" id="card-2">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/bWqxD6m6t4M" title="Prompt Engineering" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">2. Ingeniería de Prompts Avanzada</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="2">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="card" id="card-3">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/G2fqAlgmoPo" title="Gemini API" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">3. Integración con Gemini API</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="3">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="card" id="card-4">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/jZdBO3Y87eI" title="Multimodal Models" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">4. Modelos Multimodales: Visión y Texto</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="4">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 5 -->
+            <article class="card" id="card-5">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/aircAruvnKk" title="Fine Tuning" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">5. Fine-Tuning de Modelos en la Nube</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="5">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 6 -->
+            <article class="card" id="card-6">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/VwVJ-d5m8o8" title="Deploy Project" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">6. Proyecto Final: Despliegue y Demo</h3>
+                    <div class="actions">
+                        <a href="#" class="btn btn-material">📄 Lectura</a>
+                        <a href="#" class="btn btn-quiz">📝 Ver Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="switch">
+                            <input type="checkbox" class="class-toggle" data-id="6">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 ADA Education. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos del DOM
+            const toggles = document.querySelectorAll('.class-toggle');
+            const progressText = document.getElementById('progress-text');
+            const progressFill = document.getElementById('progress-fill');
+            const totalClasses = toggles.length;
+
+            // Función para actualizar el Dashboard
+            const updateDashboard = () => {
+                const checkedCount = document.querySelectorAll('.class-toggle:checked').length;
+                const percentage = (checkedCount / totalClasses) * 100;
+
+                // Actualizar Texto
+                progressText.textContent = `${checkedCount} de ${totalClasses} clases completadas`;
+                
+                // Actualizar Barra
+                progressFill.style.width = `${percentage}%`;
+
+                // Cambiar color si está al 100%
+                if (percentage === 100) {
+                    progressFill.style.backgroundColor = 'var(--accent)';
+                } else {
+                    progressFill.style.backgroundColor = 'var(--primary)';
+                }
+            };
+
+            // Función para manejar el cambio visual en la tarjeta
+            const toggleCardStyle = (checkbox) => {
+                const card = checkbox.closest('.card');
+                if (checkbox.checked) {
+                    card.classList.add('completed');
+                } else {
+                    card.classList.remove('completed');
+                }
+            };
+
+            // Cargar estado guardado (LocalStorage)
+            toggles.forEach(toggle => {
+                const cardId = toggle.getAttribute('data-id');
+                const isChecked = localStorage.getItem(`ada_course_class_${cardId}`) === 'true';
+                
+                toggle.checked = isChecked;
+                toggleCardStyle(toggle);
+
+                // Listener para cambios
+                toggle.addEventListener('change', (e) => {
+                    // Guardar en LocalStorage
+                    localStorage.setItem(`ada_course_class_${cardId}`, e.target.checked);
+                    
+                    // Actualizar estilos y dashboard
+                    toggleCardStyle(e.target);
+                    updateDashboard();
+                });
+            });
+
+            // Inicializar el dashboard al cargar
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
